@@ -4,5 +4,7 @@ CITMAGA internship files. The internship consists in the implementation of a HHL
 
 ## How to use
 - Install the requirements:
-  ```pip install -r requirements.txt```
+  ```
+  pip install -r requirements.txt
+  ```
 - Then you can use the notebooks
