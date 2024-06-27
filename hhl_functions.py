@@ -91,7 +91,7 @@ def calculate_norm(qc: QuantumCircuit, scaling) -> float:
 
 
 #Function to build the HHL circuit
-def build_circuit(matrix, vector, tolerance: float = 10e-2, flag: bool = True, meas: bool = False):
+def build_circuit(matrix, vector, tolerance: float = 10e-3, flag: bool = True, meas: bool = False):
     """
     Builds the HHL circuit using the required args
     
@@ -328,7 +328,7 @@ def create_zero_observable(qc: QuantumCircuit):
     observable = np.kron(t_one,np.kron(t_zero,t_one))
     return observable
 
-def solution(qc: QuantumCircuit) -> np.ndarray:
+def solution(qc: QuantumCircuit, flag: bool = False) -> np.ndarray:
     """Returns the solution for the given HHL Quantum Circuit using Statevectors. This is important, it only returns the values of |x>
     
     Args:
@@ -339,7 +339,14 @@ def solution(qc: QuantumCircuit) -> np.ndarray:
     """
     statevector = Statevector(qc)
     st=np.array(statevector)
-    num = int(len(st)/2)
+    length = 0
+    for elem in qc.qregs:
+        length+=elem.size    
+    
+    if flag:
+        num = int(len(st)/2) + length
+    else:
+        num = int(len(st)/2)
     sol = []
     for i in range(2**qc.qregs[0].size):
         sol.append(st[num+i].real)
