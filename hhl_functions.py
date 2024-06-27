@@ -344,7 +344,7 @@ def solution(qc: QuantumCircuit, flag: bool = False) -> np.ndarray:
         length+=elem.size    
     
     if flag:
-        num = int(len(st)/2) + length
+        num = int(len(st)/2) + 2**(length-2)
     else:
         num = int(len(st)/2)
     sol = []
