@@ -387,7 +387,7 @@ def run_circuit(qc,shots,sampler):
     res=job_result[0].data.meas.get_counts()
     return res
 
-def prob_from_sim(qc,shots=8192):
+def prob_from_sim(qc:QuantumCircuit,shots=8192):
     """Returns the probability of each possible value of the circuit qc
     
     Args:
@@ -396,6 +396,7 @@ def prob_from_sim(qc,shots=8192):
     
     """
     sim = AerSimulator()
+    qc.remove_final_measurements()
     qc.measure_all()
     qc = transpile(qc,sim)
     sampler = SamplerV2()
