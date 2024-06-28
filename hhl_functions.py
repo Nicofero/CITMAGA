@@ -378,3 +378,43 @@ def prob_from_counts_hhl(counts,shots: int, repeat) -> np.ndarray:
 
     ampl = np.array(list(prob_amplitudes.values()))
     return ampl
+
+
+def run_circuit(qc,shots,sampler):
+    sampler = SamplerV2()
+    job = sampler.run([qc],shots=shots)
+    job_result = job.result()
+    res=job_result[0].data.meas.get_counts()
+    return res
+
+def prob_from_sim(qc,shots=8192):
+    """Returns the probability of each possible value of the circuit qc
+    
+    Args:
+        `qc`: Quantum circuit to be simulated
+        `shots`: Number of shots
+    
+    """
+    sim = AerSimulator()
+    qc.measure_all()
+    qc = transpile(qc,sim)
+    sampler = SamplerV2()
+    
+    nb = qc.qregs[0].size
+    nl = qc.qregs[1].size
+
+    job = sampler.run([qc],shots=shots)
+    job_result = job.result()
+    counts=job_result[0].data.meas.get_counts()
+
+    all_outcomes = [''.join(outcome) for outcome in product('01', repeat=nb+nl+1)]
+
+    prob = []
+    for elem in all_outcomes:
+        if elem in counts:
+            prob.append(counts[elem]/shots)
+        else:
+            prob.append(0)
+    prob = np.array(prob)
+    prob = np.sqrt(prob)
+    return prob
