@@ -328,30 +328,34 @@ def create_zero_observable(qc: QuantumCircuit):
     observable = np.kron(t_one,np.kron(t_zero,t_one))
     return observable
 
-def solution(qc: QuantumCircuit, flag: bool = False) -> np.ndarray:
-    """Returns the solution for the given HHL Quantum Circuit using Statevectors. This is important, it only returns the values of |x>
+def solution(qc: QuantumCircuit, flag: bool = False,norm: bool = True,scaling : float = None, vector: np.ndarray = None) -> np.ndarray:
+    """Returns the solution for the given HHL Quantum Circuit using Statevectors. You can obtain the solution from the circuit or the real solution depending on `norm` flag
     
-    Args:
+    ## Args:
         `qc`: The HHL circuit to be solved
-        
-    Returns:
-        A numpy array containing the real solution to the normalized problem
+        `flag`: The flah indicating if the circuit is 
+        `norm`: Indicates if you want the solution to the normalized probem (True) or the solution to the full problem (False). True by default
+        `scaling`: Scaling factor of the circuit, returned by `build_circuit`. Only necessary if `norm==False`
+        `vector`: Vector defining the problem. Only necessary if `norm==False`
+    ## Returns:
+        A numpy array containing the solution
     """
-    statevector = Statevector(qc)
-    st=np.array(statevector)
-    length = 0
-    for elem in qc.qregs:
-        length+=elem.size    
+    qc.remove_final_measurements()
+    st = Statevector(qc).data.real
+    length = np.sum(elem.size for elem in qc.qregs)
     
     if flag:
         num = int(len(st)/2) + 2**(length-2)
     else:
         num = int(len(st)/2)
-    sol = []
-    for i in range(2**qc.qregs[0].size):
-        sol.append(st[num+i].real)
-    sol = np.array(sol)
-    sol = sol/np.linalg.norm(sol)
+
+    prob = sum(st[num:]**2)
+    st = st[num:num+2**qc.qregs[0].size]
+    sol = st/np.linalg.norm(st)
+    if not norm:  
+        norm_b = np.linalg.norm(vector)
+        norm_x = np.sqrt(prob)*norm_b/scaling
+        sol = norm_x*sol
     return sol
 
 def prob_from_counts_hhl(counts,shots: int, repeat) -> np.ndarray:
