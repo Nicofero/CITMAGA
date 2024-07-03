@@ -45,7 +45,7 @@ def get_delta(n_l: int, lambda_min: float, lambda_max: float) -> float:
         lamb_min_rep += int(char) / (2 ** (i + 1))
     return lamb_min_rep
 
-def calculate_norm(qc: QuantumCircuit, scaling) -> float:
+def calculate_norm(qc: QuantumCircuit, scaling,vector) -> float:
     """Calculates the value of the euclidean norm of the solution.
 
     Args:
@@ -56,38 +56,20 @@ def calculate_norm(qc: QuantumCircuit, scaling) -> float:
     """
     # Calculate the number of qubits
     nb = qc.qregs[0].size
-    nl = qc.qregs[1].size
-    na = qc.num_ancillas
-
-    # Create the Operators Zero and One
-    # Pauli Strings
-
-    # I = Identity
-    # Z = Z-Gate
-    uno = np.zeros(2)
-    uno[-1] = 1
-    aux = np.outer(uno,uno)
-    I_nb = np.eye(2**nb)
-    M = np.kron(aux,I_nb)
     
     # Get the state of the circuit
     statevector = Statevector(qc)
     st=np.array(statevector).real
     num = int(len(st)/2)
     
-    # Define solution
-    sol = []
-    for i in range(2):
-        sol.append(st[num+i].real)
-    sol = np.array(sol)
-    st = st[nb:]
-    
-    # Calculate observable
-    M_dg = M.conj().T
-    obs = M_dg @ M
-    norm_2 = np.vdot(st,obs @ st)
+    prob = sum(st[num:]**2)
+    st = st[num:num+2**nb]
+    sol = st/np.linalg.norm(st)
+    norm_b = np.linalg.norm(vector)
+    norm_x = np.sqrt(prob)*norm_b/scaling
+    sol = norm_x*sol
 
-    return np.real(np.sqrt(norm_2) / scaling)
+    return sol
 
 
 #Function to build the HHL circuit
