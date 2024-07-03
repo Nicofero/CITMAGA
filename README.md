@@ -16,7 +16,7 @@ CITMAGA internship files. The internship consists in the implementation of a HHL
   ```
   pip install -r requirements.txt
   ```
-  
+
 - Use the notebooks
 
 ## Description of the notebooks
@@ -37,4 +37,4 @@ CITMAGA internship files. The internship consists in the implementation of a HHL
 
 - [3] : Ali Javadi-Abhari, Matthew Treinish, Kevin Krsulich, Christopher J. Wood, Jake Lishman, Julien Gacon, Simon Martiel, Paul D. Nation, Lev S. Bishop, Andrew W. Cross, Blake R. Johnson, and Jay M. Gambetta. Quantum computing with Qiskit, 2024
 
-The HHL algorithm is mainly based in the HHL existent in Qiskit 0.21, with some modification and added features based on [2]
+The HHL algorithm is mainly based in the HHL existent in Qiskit 0.21, with some modifications and added features based on [2].
