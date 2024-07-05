@@ -567,6 +567,16 @@ def prob_from_sim(qc:QuantumCircuit,shots=8192):
     prob = np.sqrt(prob)
     return prob
 
+# Gets the norm of the original vector from counts
+def norm_from_counts(counts,scaling,vector,shots=8192):
+    filtered_counts = {k: v for k, v in counts.items() if k[0] == '1'}
+    total_filtered_counts = sum(filtered_counts.values())
+    norm_b = np.linalg.norm(vector)
+
+    P1 = total_filtered_counts/shots
+    norm_x = np.sqrt(P1)*norm_b/(scaling)
+    return norm_x
+
 def fourier_error_analysis(x:np.ndarray,y:np.ndarray,tol: float = 1e-6,n_peaks:int = None) -> None:
     """Computes the Fourier Analysis of a given data
 
@@ -666,3 +676,31 @@ def fourier_error_analysis(x:np.ndarray,y:np.ndarray,tol: float = 1e-6,n_peaks:i
     display(Math(latex_str))
 
     return popt
+
+
+# Transpile simulate and get counts from a circuit
+def get_counts(qc:QuantumCircuit,shots:int = 8192):
+    """Transpile, simulate and get counts from a circuit
+    
+    ## Args:
+        `qc`: Quantum circuit to simulate
+    
+    ## Returns:
+        Dictionary containing a number of counts for each key
+    """
+    # Remove and add measurements, to not have multiple measurements
+    qc.remove_final_measurements()
+    qc.measure_all()
+
+    # Define simulator
+    sim = AerSimulator()
+    qc_meas = transpile(qc,sim)
+
+    sampler = SamplerV2()
+
+    job = sampler.run([qc_meas],shots=shots)
+    job_result = job.result()
+
+    counts=job_result[0].data.meas.get_counts()
+
+    return counts
