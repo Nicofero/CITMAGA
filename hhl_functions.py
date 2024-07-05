@@ -526,7 +526,6 @@ def prob_from_counts_hhl(counts,shots: int, repeat) -> np.ndarray:
     ampl = np.array(list(prob_amplitudes.values()))
     return ampl
 
-
 def run_circuit(qc,shots,sampler):
     sampler = SamplerV2()
     job = sampler.run([qc],shots=shots)
