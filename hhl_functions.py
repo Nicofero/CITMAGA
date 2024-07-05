@@ -12,7 +12,7 @@
 import numpy as np
 from typing import Optional
 from qiskit import QuantumCircuit, QuantumRegister, AncillaRegister, transpile, ClassicalRegister
-from qiskit.circuit.library import PhaseEstimation
+from qiskit.circuit.library import PhaseEstimation, RYGate
 from qiskit.circuit.library.arithmetic.piecewise_chebyshev import PiecewiseChebyshev  
 from qiskit.circuit.library.arithmetic.exact_reciprocal import ExactReciprocal
 from numpy_matrix import NumPyMatrix
@@ -71,9 +71,138 @@ def calculate_norm(qc: QuantumCircuit, scaling,vector) -> float:
 
     return sol
 
+def parse_func(poly_str):
+    # Remove spaces
+    poly_str = poly_str.replace(' ', '')
+    
+    # Standardize the polynomial string to handle positive terms properly
+    poly_str = poly_str.replace('-', '+-')
+    if poly_str[0] == '+':
+        poly_str = poly_str[1:]
+    
+    # Split the string into terms
+    terms = poly_str.split('+')
+    
+    coefficients = {}
+    max_degree = 0
+    
+    for term in terms:
+        if 'x' in term:
+            if '^' in term:
+                coef, exp = term.split('x^')
+                exp = int(exp)
+            else:
+                coef, exp = term.split('x')
+                exp = 1
+            
+            if coef in ('', '+'):
+                coef = 1
+            elif coef == '-':
+                coef = -1
+            else:
+                coef = int(coef)
+        else:
+            coef = int(term)
+            exp = 0
+        
+        coefficients[exp] = coef
+        if exp > max_degree:
+            max_degree = exp
+    
+    # Fill missing degrees with 0
+    all_coefficients = [coefficients.get(i, 0) for i in range(max_degree + 1)]
+    return all_coefficients,max_degree
+
+def value_func(coefs,nb):
+    
+    if not isinstance(coefs,np.ndarray):
+        coefs = np.array(coefs)
+    
+    size = 2**nb
+    
+    pol=[]
+    for i in range(size):
+        aux = 0
+        for j in range(1,len(coefs)):
+            aux +=coefs[j]*i**j
+        pol.append(aux)     
+    
+    return pol
+
+def loc_ancilla(qc: QuantumCircuit):
+    i=0
+    pos=0
+    while True:        
+        if isinstance(qc.qregs[i],AncillaRegister):
+            break
+        else:
+            pos+= qc.qregs[i].size
+            i+=1
+            
+    return pos
+    
+def ccry(qc:QuantumCircuit,theta: float,control: list,target):
+    ry = RYGate(theta).control(len(control))
+    if isinstance(control,list):
+        if isinstance(target,list):
+            qc.append(ry,control+target)
+        elif isinstance(target,AncillaRegister):
+            qc.append(ry,control+[loc_ancilla(qc)])
+            
+    return qc
+
+def b_state(nb: int,function: str,c: float = 10e-7) -> QuantumCircuit:
+    """Defines the b state from an approximation polynomic function
+    
+    Args:
+        `nb`: The number of qubits needed to represent the vector
+        `function`: A string representing the function. The style must be: 'ax^n+bx^n-1+...+z'. Where a,b,...,z are the amplitudes.
+        
+    """
+    qr = QuantumRegister(nb,name="b")
+    qa = AncillaRegister(1,name='a')
+    qc = QuantumCircuit(qr,qa)
+    
+    qc.h(qr[:])
+    
+    # Processing of `function`
+    ampl,D = parse_func(function)
+    
+    # Value of `function`
+    pol = value_func(ampl,nb)
+    
+    if ampl[0]!=0:
+        qc.ry(D*ampl[0]*c,qa)
+    
+    size = 2**nb
+    
+    for i in range(1,size):        
+        if (np.floor(np.log2(i))==np.ceil(np.log2(i))):
+            if pol[i]!=0:
+                qc.cry(D*pol[i]*c,qr[int(np.log2(i))],qa)
+        else:
+            bin_aux = bin(i)[2:]
+            index = [len(bin_aux) - 1 - j for j, digit in enumerate(bin_aux) if digit == '1' ]
+            # I dont remember why this 2**i, but it made sense in the moment i coded it
+            aux = [pol[2**i] for i in index]
+            elem = pol[i]-np.sum(aux)
+            if elem != 0:
+                # qc.mcry(D*elem*c,index,qa) 
+                qc = ccry(qc,D*elem*c,index,qa)    
+    return qc
+
+def b_from_func(function,size):
+    coef,dg = parse_func(function)
+    b = []
+    for i in range(size):
+        aux = 0
+        for j in range(dg+1):
+            aux+=coef[j]*((i/(size-1))**j)
+        b.append(aux)
+    return b
 
 #Function to build the HHL circuit
-def build_circuit(matrix, vector, tolerance: float = 10e-3, flag: bool = True, meas: bool = False):
+def build_circuit(matrix, vector, tolerance: float = 10e-3, flag: bool = True, meas: bool = False,fnc: str = None,c:float = None):
     """
     Builds the HHL circuit using the required args
     
@@ -83,6 +212,7 @@ def build_circuit(matrix, vector, tolerance: float = 10e-3, flag: bool = True, m
         `tolerance`: Tolerance of the solution bounds. This value is used to define the 3 tolerances needed for the HHL [2] equation (62).
         `flag`: Flag deciding whether the reciprocal circuit is or not exact
         `meas`: Flag deciding whether measures are made in the non x qubits
+        `fnc`: String selecting the function to map the values to b. The style is: 'ax^n+...+bx+c'
         
     Returns:
         The HHL circuit
@@ -97,16 +227,36 @@ def build_circuit(matrix, vector, tolerance: float = 10e-3, flag: bool = True, m
     epsilon_r = tolerance/3
     epsilon_s = tolerance/3
     
+    # Number of ancillas of the vector init
+    anc = False
+    
     # We need an np.array to write the values to the register
-    if isinstance(vector,(list,np.ndarray)):
+    if isinstance(vector,(list,np.ndarray,int)):
         if isinstance(vector,list):
-            vector = np.array(vector)    
+            vector = np.array(vector)
+        
         # We define the number of needed qubits and insert the vector to the register
-        nb = int(np.log2(len(vector)))
-        vector_circuit = QuantumCircuit(nb)
-        vector_circuit.initialize(vector / np.linalg.norm(vector), list(range(nb)), None)
-        # for i in range(nb):
-        #     vector_circuit.h(i)
+        
+        if isinstance(vector,int):
+            nb = vector
+        else:
+            nb = int(np.log2(len(vector)))
+        
+        if fnc is None:            
+            vector_circuit = QuantumCircuit(nb)
+            vector_circuit.initialize(vector / np.linalg.norm(vector), list(range(nb)), None)
+        
+        else:
+            if c is None:
+                # Could be calculated in O(N) time, so we input an approximation of Cb to calculate in O(1)
+                Cb = 0.9
+                c = epsilon_s/(8*Cb)
+                vector_circuit = b_state(nb,fnc,c)
+            else:
+                Cb = 0.9
+                c = epsilon_s/(8*Cb)
+                vector_circuit = b_state(nb,fnc,c)
+            anc = True
     else:
         raise ValueError(f"Invalid type for vector: {type(vector)}.")
     
@@ -127,14 +277,14 @@ def build_circuit(matrix, vector, tolerance: float = 10e-3, flag: bool = True, m
         if not np.allclose(matrix, matrix.conj().T):
             raise ValueError("Input matrix must be hermitian!")
         
-        if matrix.shape[0] != 2 ** vector_circuit.num_qubits:
-            raise ValueError(
-                "Input vector dimension does not match input "
-                "matrix dimension! Vector dimension: "
-                + str(vector_circuit.num_qubits)
-                + ". Matrix dimension: "
-                + str(matrix.shape[0])
-            )
+        # if matrix.shape[0] != 2 ** vector_circuit.num_qubits:
+        #     raise ValueError(
+        #         "Input vector dimension does not match input "
+        #         "matrix dimension! Vector dimension: "
+        #         + str(vector_circuit.num_qubits)
+        #         + ". Matrix dimension: "
+        #         + str(matrix.shape[0])
+        #     )
         # We default to a TridiagonalToeplitz matrix, but in a general case we would use a more general library
         # Also, we want the evolution_time to be 2pi/\landa_{max}, but we update it after, when we have the eigenvalues of the matrix
         matrix_circuit = NumPyMatrix(matrix,evolution_time=2 * np.pi, tolerance=epsilon_a)
@@ -156,10 +306,10 @@ def build_circuit(matrix, vector, tolerance: float = 10e-3, flag: bool = True, m
     # Define eigenvalues
     if hasattr(matrix_circuit, "eigs_bounds"):
         lambda_min, lambda_max = matrix_circuit.eigs_bounds()
-        
         # Constant so that the minimum eigenvalue is represented exactly, since it contributes
         # the most to the solution of the system
         delta = get_delta(nl, lambda_min, lambda_max)
+
         # Update evolution time
         matrix_circuit.evolution_time = 2 * np.pi * delta / lambda_min
         # Update the scaling of the solution
@@ -182,7 +332,6 @@ def build_circuit(matrix, vector, tolerance: float = 10e-3, flag: bool = True, m
         # Calculate breakpoints for the reciprocal approximation
         num_values = 2 ** nl
         constant = delta
-        # a as [2] indicates
         
         # No tengo para nada claro esto, no encuentro que hay que hacer con la a para pasarla a entero
         a = int(2**(2*nl/3))  # pylint: disable=invalid-name
@@ -210,21 +359,32 @@ def build_circuit(matrix, vector, tolerance: float = 10e-3, flag: bool = True, m
         na = max(matrix_circuit.num_ancillas, reciprocal_circuit.num_ancillas)
         
     # Construction of the circuit
-    
+        
     # Initialise the quantum registers
     qb = QuantumRegister(nb,name="b")  # right hand side and solution
     ql = QuantumRegister(nl,name="0")  # eigenvalue evaluation qubits
     if na > 0:
         qa = AncillaRegister(na,name="anc")  # ancilla qubits
+    if anc:
+        qab = AncillaRegister(1,name='a_b') # ancilla qubit for the approximation of b
     qf = QuantumRegister(nf,name="flag")  # flag qubits
 
     if na > 0:
-        qc = QuantumCircuit(qb, ql, qa, qf)
+        if anc:
+            qc = QuantumCircuit(qb, ql, qa, qab, qf)
+        else:
+            qc = QuantumCircuit(qb, ql, qa, qf)
     else:
-        qc = QuantumCircuit(qb, ql, qf)
+        if anc:
+            qc = QuantumCircuit(qb, ql, qab, qf)
+        else:
+            qc = QuantumCircuit(qb, ql, qf)
 
     # State preparation
-    qc.append(vector_circuit, qb[:])
+    if anc:
+        qc.append(vector_circuit, qb[:] + qab[:])
+    else:
+        qc.append(vector_circuit, qb[:])
     qc.barrier(label="\pi_1")
     # QPE
     phase_estimation = PhaseEstimation(nl, matrix_circuit)
