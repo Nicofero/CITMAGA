@@ -22,6 +22,9 @@ from qiskit_aer import AerSimulator
 from qiskit_aer.primitives import SamplerV2
 from itertools import product
 import matplotlib.pyplot as plt
+from scipy.optimize import curve_fit
+from scipy.signal import find_peaks
+from IPython.display import display, Latex, Math
 
 def get_delta(n_l: int, lambda_min: float, lambda_max: float) -> float:
     """Calculates the scaling factor to represent exactly lambda_min on nl binary digits.
@@ -253,8 +256,6 @@ def build_circuit(matrix, vector, tolerance: float = 10e-3, flag: bool = True, m
                 c = epsilon_s/(8*Cb)
                 vector_circuit = b_state(nb,fnc,c)
             else:
-                Cb = 0.9
-                c = epsilon_s/(8*Cb)
                 vector_circuit = b_state(nb,fnc,c)
             anc = True
     else:
@@ -565,3 +566,103 @@ def prob_from_sim(qc:QuantumCircuit,shots=8192):
     prob = np.array(prob)
     prob = np.sqrt(prob)
     return prob
+
+def fourier_error_analysis(x:np.ndarray,y:np.ndarray,tol: float = 1e-6,n_peaks:int = None) -> None:
+    """Computes the Fourier Analysis of a given data
+
+    ## Args:
+        `x`: Points where data is taken
+        `y`: The values of the data
+        `tol`: Tolerance of the peak detection. By default 1e-6
+        `n_peaks`: Number of peaks from the Fourier Transform to be computed in the estimation. If no value is given, all peaks will be used
+    ## Returns:
+        The parameters of the fitting
+    """
+    ampl = np.fft.fft(y)
+
+    freqs = np.fft.fftfreq(x.size, d=(x[1] - x[0]) )
+
+    positive_freqs = freqs[:len(freqs)//2]
+    positive_fft_result = np.abs(ampl)[:len(freqs)//2]
+
+    peaks,_= find_peaks(positive_fft_result,threshold=tol)
+
+    print(f'Picos en: {peaks}')
+
+    power = np.abs(ampl)
+
+    #print(ampl)
+
+    if n_peaks is None:
+        main_freqs_indices = peaks[:]
+    else:
+        main_freqs_indices = peaks[:n_peaks]
+    main_freqs = freqs[main_freqs_indices]
+    main_powers = power[main_freqs_indices]
+
+    def model_func(t, *params):
+        n = len(params) // 3
+        result = np.zeros_like(t)
+        for i in range(n):
+            A = params[3*i]
+            f = params[3*i + 1]
+            phi = params[3*i + 2]
+            result += A * np.cos(2 * np.pi * f * t + phi)
+        return result
+
+    initial_guess = []
+    for freq, power in zip(main_freqs, main_powers):
+        initial_guess.extend([power, freq, 0.0])
+
+    try:
+        popt, _ = curve_fit(model_func, x, y, p0=initial_guess)
+    except Exception:
+        print("\033[91m{}\033[00m \n".format('---------------------------------------------------------------------------'))
+        print("\033[91m{}\033[00m".format('The number of peaks must be lower or the function wont converge'))
+        raise
+    
+    plt.figure(figsize=(12, 10))
+
+    plt.subplot(2, 1, 1)
+
+    plt.plot(x, y,label='Original Signal')
+    plt.title('Sampled Function')
+    plt.xlabel('Time [s]')
+    plt.ylabel('Amplitude')
+
+    # Plot the magnitude of the FFT result
+    plt.subplot(2, 1, 2)
+    plt.plot(positive_freqs, np.abs(positive_fft_result))  # Only plot the positive frequencies
+    plt.title('Fourier Transform')
+    plt.xlabel('Frequency')
+    plt.ylabel('Magnitude')
+    plt.grid(True,'both')
+
+    # Construct the fitted signal from the optimized parameters
+    y_fitted = model_func(x, *popt)
+
+    # Step 5: Compare the approximation to the original vector
+    plt.subplot(2, 1, 1)
+    plt.plot(x, y_fitted, label='Fitted Signal', color='red')
+    plt.title('Fitted Signal')
+    plt.legend()
+
+    plt.tight_layout()
+
+    plt.show()
+
+    print("Fitted Parameters (Amplitude, Frequency, Phase):")
+    for i in range(len(popt)//3):
+        print(f"Cosine {i+1}: Amplitude = {popt[3*i]:.2f}, Frequency = {popt[3*i + 1]:.2f} Hz, Phase = {popt[3*i + 2]:.2f} radians")
+
+    print('Function:')
+    latex_str = r"f(t)="
+    for i in range(len(popt)//3):
+        amplitude = f"{popt[3*i]:+0.2f}"
+        frequency = f"{popt[3*i + 1]:.2f}"
+        phase = f"{popt[3*i + 2]:+0.2f}"
+        latex_str += rf" {amplitude}\cos(2\pi {frequency}t {phase})"
+    display(Latex(latex_str))
+    display(Math(latex_str))
+
+    return popt
