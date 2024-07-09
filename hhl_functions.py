@@ -343,9 +343,9 @@ class HHL():
     def prob_from_counts_hhl(self,counts) -> np.ndarray:
         """ Calculates the expected probability of the solution |x> without normalization
         
-        Args:
+        ## Args:
             `counts`: Counts as a dictionary {'xxxxx': number}, obtained from a simulation or run in a real QPU
-        Returns:
+        ## Returns:
             The non normalized probabilities of the solution. To get the real solution, you should get its square root, normalize it and multiply it by the norm of the solution.
         """ 
         all_outcomes = [''.join(outcome) for outcome in product('01', repeat=self.nb)]
@@ -363,7 +363,7 @@ class HHL():
         return ampl
     
     # Transpile simulate and get counts from a circuit
-    def get_counts(self,shots:int = 8192):
+    def get_counts(self,backend,shots:int = 8192):
         """Transpile, simulate and get counts from a circuit
         
         ## Args:
@@ -377,15 +377,12 @@ class HHL():
         self.qc.measure_all()
 
         # Define simulator
-        sim = AerSimulator()
-        qc_meas = transpile(self.qc,sim)
+        qc_meas = transpile(self.qc,backend,optimization_level=2)
 
-        sampler = SamplerV2()
-
-        job = sampler.run([qc_meas],shots=shots)
+        job = backend.run(qc_meas,shots=shots)
         job_result = job.result()
 
-        counts=job_result[0].data.meas.get_counts()
+        counts=job_result.get_counts()
 
         return counts
     
