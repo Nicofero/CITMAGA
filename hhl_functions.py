@@ -341,13 +341,12 @@ class HHL():
         return sol
 
     def prob_from_counts_hhl(self,counts) -> np.ndarray:
-        """ Calculates the expected amplitudes of the solution |x> without normalization
+        """ Calculates the expected probability of the solution |x> without normalization
         
         Args:
             `counts`: Counts as a dictionary {'xxxxx': number}, obtained from a simulation or run in a real QPU
-            `shots`: Number of shots (runs) of the circuit
         Returns:
-            The non normalized amplitudes of the solution. To get the real solution, you should normalize it and multiply it by the norm of the solution.
+            The non normalized probabilities of the solution. To get the real solution, you should get its square root, normalize it and multiply it by the norm of the solution.
         """ 
         all_outcomes = [''.join(outcome) for outcome in product('01', repeat=self.nb)]
 
