@@ -297,10 +297,7 @@ class HHL():
         """Calculates the value of the euclidean norm of the solution.
         Returns:
             The value of the euclidean norm of the solution.
-        """
-        # Calculate the number of qubits
-        nb = self.qc.qregs[0].size
-        
+        """        
         # Get the state of the circuit
         statevector = Statevector(self.qc)
         st=np.array(statevector).real
@@ -700,23 +697,28 @@ def fourier_error_analysis(x:np.ndarray,y:np.ndarray,tol: float = 1e-6,n_peaks:i
 
 #Needed for Qmio
 def get_delta(nl:int, lambda_min: float, lambda_max: float) -> float:
-        """Calculates the scaling factor to represent exactly lambda_min on nl binary digits.
+    """Calculates the scaling factor to represent exactly lambda_min on nl binary digits.
 
-        Args:
-            n_l: The number of qubits to represent the eigenvalues.
-            lambda_min: the smallest eigenvalue.
-            lambda_max: the largest eigenvalue.
+    Args:
+        n_l: The number of qubits to represent the eigenvalues.
+        lambda_min: the smallest eigenvalue.
+        lambda_max: the largest eigenvalue.
 
-        Returns:
-            The value of the scaling factor.
-        """
-        formatstr = "#0" + str(nl + 2) + "b"
-        lambda_min_tilde = np.abs(lambda_min * (2 ** nl - 1) / lambda_max)
-        # floating point precision can cause problems
-        if np.abs(lambda_min_tilde - 1) < 1e-7:
-            lambda_min_tilde = 1
-        binstr = format(int(lambda_min_tilde), formatstr)[2::]
-        lamb_min_rep = 0
-        for i, char in enumerate(binstr):
-            lamb_min_rep += int(char) / (2 ** (i + 1))
+    Returns:
+        The value of the scaling factor.
+    """
+    formatstr = "#0" + str(nl + 2) + "b"
+    lambda_min_tilde = np.abs(lambda_min * (2 ** nl - 1) / lambda_max)
+    # floating point precision can cause problems
+    if np.abs(lambda_min_tilde - 1) < 1e-7:
+        lambda_min_tilde = 1
+    binstr = format(int(lambda_min_tilde), formatstr)[2::]
+    lamb_min_rep = 0
+    for i, char in enumerate(binstr):
+        lamb_min_rep += int(char) / (2 ** (i + 1))
         return lamb_min_rep
+
+def prepare_circ(qc:QuantumCircuit):
+    qc = qc.decompose(reps=8)
+    qc.data = [instruction for instruction in qc.data if instruction.operation.name!='reset']
+    return qc
