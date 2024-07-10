@@ -163,6 +163,7 @@ def ampl_from_sim(qc,backend,nb,nl,shots=8192,reps=1):
     qc.measure_all()
     qc = transpile(qc,backend,optimization_level=2)  
 
+    counts = {}
     for _ in range(reps):
         job = backend.run(qc,shots=shots)
         job_result = job.result()
