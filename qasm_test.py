@@ -1,6 +1,6 @@
 from hhl_functions import *
 from qiskit import transpile
-from qiskit.qasm3 import dumps
+from qiskit.qasm2 import dumps
 from qmio import QmioRuntimeService
 
 

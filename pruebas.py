@@ -6,8 +6,9 @@ from qiskit.circuit.library.arithmetic.exact_reciprocal import ExactReciprocal
 from qiskit.quantum_info import Statevector
 from qmiotools.integrations.qiskitqmio import QmioBackend, FakeQmio
 
-vector = np.array([1]*4)
-matrix = tridiag_matrix(2,-1,4)
+nb=4
+vector = np.array([1]*nb)
+matrix = tridiag_matrix(2,-1,nb)
 
 hhl = HHL(matrix,vector)
 
@@ -19,17 +20,19 @@ hhl.qc.measure_all()
 backend = QmioBackend()
 backend2 = FakeQmio()
 
-results = hhl.get_counts(backend,shots=8192)
+results = hhl.get_counts(backend2,shots=100000)
 
 print(results)
 
 prob_ampl = np.sqrt(hhl.prob_from_counts_hhl(results))
+num = int(len(prob_ampl)/2)
+sol = prob_ampl[num:num+nb]
 
-print("Estimated amplitudes of the solution:", prob_ampl)
+print("Estimated amplitudes of the solution:", sol/np.linalg.norm(sol))
 
 norm = hhl.norm_from_counts(results)
 
-print("Solution: ",norm*prob_ampl)
+print("Solution: ",norm*sol)
 
 hist = plot_histogram(results)
 

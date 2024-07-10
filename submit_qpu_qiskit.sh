@@ -8,4 +8,4 @@
 module load qmio-tools
 module load gcc qiskit
 
-python pruebas.py
+python hybrid.py

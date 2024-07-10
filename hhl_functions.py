@@ -345,19 +345,19 @@ class HHL():
         ## Returns:
             The non normalized probabilities of the solution. To get the real solution, you should get its square root, normalize it and multiply it by the norm of the solution.
         """ 
-        all_outcomes = [''.join(outcome) for outcome in product('01', repeat=self.nb)]
-
-        # Initialize the dictionary with each binary string as a key and a value of 0
-        prob_amplitudes = {outcome: 0 for outcome in all_outcomes}
+        all_outcomes = [''.join(outcome) for outcome in product('01', repeat=self.nb+self.nl+1)]
 
         shots = sum(counts.values())
 
-        for outcome, count in counts.items():
-            first_qubit_state = outcome[-self.nb:]  # Get the state of the first qubit
-            prob_amplitudes[first_qubit_state] += count / shots
-
-        ampl = np.array(list(prob_amplitudes.values()))
-        return ampl
+        prob = []
+        for elem in all_outcomes:
+            if elem in counts:
+                prob.append(counts[elem]/shots)
+            else:
+                prob.append(0)
+        prob = np.array(prob)
+        prob = np.sqrt(prob)
+        return prob
     
     # Transpile simulate and get counts from a circuit
     def get_counts(self,backend,shots:int = 8192):

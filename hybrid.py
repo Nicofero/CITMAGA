@@ -158,13 +158,10 @@ def inverse_qpe(state,nb,nl,matrix_circuit):
 
     return qc
 
-def ampl_from_sim(qc,backend,shots=8192,reps=1):
+def ampl_from_sim(qc,backend,nb,nl,shots=8192,reps=1):
     qc.remove_final_measurements()
     qc.measure_all()
-    qc = transpile(qc,backend,optimization_level=2)
-    
-    nb = qc.qregs[0].size
-    nl = qc.qregs[1].size
+    qc = transpile(qc,backend,optimization_level=2)  
 
     for _ in range(reps):
         job = backend.run(qc,shots=shots)
@@ -201,7 +198,7 @@ state = Statevector(qc1)
 qc2,_ = eig_inverse(state,nb,nl,mt_circ)
 qc2 = prepare_circ(qc2)
 
-state2 = ampl_from_sim(qc2,b_qmio)
+state2 = ampl_from_sim(qc2,b_qmio,nb,nl)
 
 # Third circuit (Statevector)
 qc3 = inverse_qpe(state2,nb,nl,mt_circ)
@@ -216,14 +213,14 @@ print('Tiempo:',end-start)
 start = time.time()
 # First circuit (FakeQmio)
 qc1 = prepare_circ(qc1)
-state = ampl_from_sim(qc1,b_fake)
+state = ampl_from_sim(qc1,b_fake,nb,nl)
 
 # Second circuit (Qmio)
-state2 = ampl_from_sim(qc2,b_qmio)
+state2 = ampl_from_sim(qc2,b_qmio,nb,nl)
 
 # Third circuit (FakeQmio)
 qc3 = prepare_circ(qc3)
-state_f = ampl_from_sim(qc3,b_fake)
+state_f = ampl_from_sim(qc3,b_fake,nb,nl)
 sol = state_f.data.real[num:num+2**nb]
 end = time.time()
 

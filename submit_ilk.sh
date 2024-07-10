@@ -14,4 +14,5 @@ module load qmio-tools
 module load gcc qiskit
 
 # python statevectors_test.py
-python hybrid.py
+# python hybrid.py
+python pruebas.py
