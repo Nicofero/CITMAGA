@@ -295,7 +295,7 @@ class HHL():
     # Calculates the norm of the solution
     def calculate_norm(self) -> float:
         """Calculates the value of the euclidean norm of the solution.
-        Returns:
+        ## Returns:
             The value of the euclidean norm of the solution.
         """        
         # Get the state of the circuit
@@ -345,7 +345,7 @@ class HHL():
         ## Returns:
             The non normalized probabilities of the solution. To get the real solution, you should get its square root, normalize it and multiply it by the norm of the solution.
         """ 
-        all_outcomes = [''.join(outcome) for outcome in product('01', repeat=self.nb+self.nl+1)]
+        all_outcomes = [''.join(outcome) for outcome in product('01', repeat=self.nb+self.nl+self.na+1)]
 
         shots = sum(counts.values())
 
@@ -478,7 +478,7 @@ def ccry(qc:QuantumCircuit,theta: float,control: list,target):
 def b_state(nb: int,function: str,c: float = 10e-7) -> QuantumCircuit:
     """Defines the b state from an approximation polynomic function
     
-    Args:
+    ## Args:
         `nb`: The number of qubits needed to represent the vector
         `function`: A string representing the function. The style must be: 'ax^n+bx^n-1+...+z'. Where a,b,...,z are the amplitudes.
         
@@ -529,12 +529,12 @@ def b_from_func(function,size):
 def tridiag_matrix(diag,up,n) -> np.ndarray:
     """Returns a tridiagonal symmetrical matrix
     
-    Args:
+    ## Args:
         `diag`: Value of the diagonal
         `up`: Value of the subdiagonals
         `n`: Size of the matrix
     
-    Returns:
+    ## Returns:
         The matrix
     """
     if n<2: 
@@ -565,7 +565,7 @@ def run_circuit(qc,shots,sampler):
 def prob_from_sim(qc:QuantumCircuit,shots=8192):
     """Returns the probability of each possible value of the circuit qc
     
-    Args:
+    ## Args:
         `qc`: Quantum circuit to be simulated
         `shots`: Number of shots
     
@@ -699,12 +699,12 @@ def fourier_error_analysis(x:np.ndarray,y:np.ndarray,tol: float = 1e-6,n_peaks:i
 def get_delta(nl:int, lambda_min: float, lambda_max: float) -> float:
     """Calculates the scaling factor to represent exactly lambda_min on nl binary digits.
 
-    Args:
+    ## Args:
         n_l: The number of qubits to represent the eigenvalues.
         lambda_min: the smallest eigenvalue.
         lambda_max: the largest eigenvalue.
 
-    Returns:
+    ## Returns:
         The value of the scaling factor.
     """
     formatstr = "#0" + str(nl + 2) + "b"
