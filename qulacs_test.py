@@ -12,7 +12,6 @@ def parse_qasm3(qasm_code):
     operations = []
 
     for line in lines:
-        print(operations)
         if line.startswith("qubit"):
             # Extract the qubit declaration
             match = re.search(r'qubit\[(\d+)\] (\w+);', line)
@@ -29,7 +28,6 @@ def parse_qasm3(qasm_code):
             match = re.search(r'U\(([^)]+)\) (\w+)\[(\d+)\];', line)
             if match:
                 params = [eval(param.strip()) for param in match.group(1).split(',')]
-                print(params)
                 qubit = match.group(2)
                 target = int(match.group(3))
                 operations.append(("U", params, qubit, target))
@@ -93,8 +91,10 @@ hhl_qul.update_quantum_state(state)
 state_vector = state.get_vector().real
 end= time.time()
 
+num = 2**(n_qubits-1)
+
 if mpirank == 0:
     print(np.round(state_vector,5))
     print("Time with Qulacs: ",end-start)
 
-    print("Solución:",state_vector)
+    print("Solución:",state_vector[num:num+2**4])
