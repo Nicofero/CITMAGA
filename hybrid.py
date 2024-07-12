@@ -186,9 +186,11 @@ b_qmio = QmioBackend()
 b_fake = FakeQmio()
 shots = 8192
 
+print("Prueba con 8, sin repeticiones")
+
 # Initialization
-vector = np.array([1]*4)
-matrix = tridiag_matrix(2,-1,4)
+vector = np.array([1]*8)
+matrix = tridiag_matrix(2,-1,8)
 
 start = time.time()
 # First circuit (Statevector)
@@ -199,7 +201,9 @@ state = Statevector(qc1)
 qc2,_ = eig_inverse(state,nb,nl,mt_circ)
 qc2 = prepare_circ(qc2)
 
-state2 = ampl_from_sim(qc2,b_qmio,nb,nl)
+state2 = ampl_from_sim(qc2,b_qmio,nb,nl,reps=3)
+
+state2 = state2 / np.linalg.norm(state2)
 
 # Third circuit (Statevector)
 qc3 = inverse_qpe(state2,nb,nl,mt_circ)
@@ -214,15 +218,15 @@ print('Tiempo:',end-start)
 start = time.time()
 # First circuit (FakeQmio)
 qc1 = prepare_circ(qc1)
-state = ampl_from_sim(qc1,b_fake,nb,nl)
+state = ampl_from_sim(qc1,b_fake,nb,nl,reps=1)
 
 # Second circuit (Qmio)
-state2 = ampl_from_sim(qc2,b_qmio,nb,nl)
+state2 = ampl_from_sim(qc2,b_qmio,nb,nl,reps=1)
 
 # Third circuit (FakeQmio)
 qc3 = prepare_circ(qc3)
-state_f = ampl_from_sim(qc3,b_fake,nb,nl)
-sol = state_f.data.real[num:num+2**nb]
+state_f = ampl_from_sim(qc3,b_fake,nb,nl,reps=1)
+sol = state_f[num:num+2**nb]
 end = time.time()
 
 print(f'Solucion con todo simulado: {sol/np.linalg.norm(sol)}')
