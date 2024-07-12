@@ -21,13 +21,15 @@ CITMAGA internship files. The internship consists in the implementation of a HHL
 
 ## Description of the notebooks
 
-- **Pruebas_Qiskit.ipynb:** This notebook contains the different tests that are being done, and don't work/don't deserve an individual file
+- **Pruebas_Qiskit.ipynb:** This notebook contains the different tests that are being done, and don't work/don't deserve an individual file.
 
-- **Number_of_gates.ipynb:** This notebook cointains the study of the number of gates of the HHL custom circuit depending of the way it is constructed (with/without approximations)
+- **Number_of_gates.ipynb:** This notebook cointains the study of the number of gates of the HHL custom circuit depending of the way it is constructed (with/without approximations).
 
-- **Qmio_hhl.ipynb:** Notebook where the different functions are created especifically for the Qmio
+- **Qmio_hhl.ipynb:** Notebook where the different functions are created especifically for the Qmio.
 
-- **b_side_approx.ipynb:** This notebook contains all the code related with the approximation of the right-hand side
+- **b_side_approx.ipynb:** This notebook contains all the code related with the approximation of the right-hand side.
+
+- **Qulacs.ipynb:** Contains the functions to transform the Qiskit circuit into a Qulacs circuit, and some time comparisons.
 
 ## References
 
