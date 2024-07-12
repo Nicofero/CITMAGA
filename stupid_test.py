@@ -1,15 +1,18 @@
-from qiskit import transpile, QuantumCircuit
-from qmiotools.integrations.qiskitqmio import QmioBackend
+from hhl_functions import *
+from qiskit.qasm3 import dumps
 
-qc = QuantumCircuit(1)
-qc.x(0)
-qc.measure_all()
-b_qmio = QmioBackend()
+print("\n\n-------------PRUEBA CIRCUITO DIMESION 32-------------\n\n")
 
-qc = transpile(qc,b_qmio,optimization_level=2)
+vector = np.array([1]*32)
+matrix = tridiag_matrix(2,-1,32)
 
-job = b_qmio.run(qc,shots=8192,repetition_period=0.01)
+hhl = HHL(matrix,vector)
 
-result = job.result().get_counts()
+hhl.qc = prepare_circ(hhl.qc)
+
+result = dumps(hhl.qc)
+
+with open('qasm_32.qasm','a+') as file:
+    file.write(result)
 
 print(result)

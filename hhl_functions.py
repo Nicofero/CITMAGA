@@ -125,9 +125,9 @@ class HHL():
             
             if self.fnc is None:            
                 vector_circuit = QuantumCircuit(self.nb)
-                vector_circuit.initialize(vector / np.linalg.norm(vector), list(range(self.nb)), None)
-                # for i in range(self.nb):
-                #     vector_circuit.h(i)
+                # vector_circuit.initialize(vector / np.linalg.norm(vector), list(range(self.nb)), None)
+                for i in range(self.nb):
+                    vector_circuit.h(i)
             
             else:
                 if self.c is None:

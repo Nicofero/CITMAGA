@@ -13,17 +13,15 @@ NB = 2**nb
 vector = np.array([1]*NB)
 matrix = tridiag_matrix(2,-1,NB)
 
-hhl = HHL(matrix,vector,flag=False)
+hhl = HHL(matrix,vector)
 
-hhl.qc = hhl.qc.decompose(reps=8)
-hhl.qc.data = [instruction for instruction in hhl.qc.data if instruction.operation.name!='reset']
+hhl.qc = prepare_circ(hhl.qc)
 
-hhl.qc.measure_all()
 
 backend = QmioBackend()
 backend2 = FakeQmio()
 
-results = hhl.get_counts(backend2)
+results = hhl.get_counts(backend)
 
 prob_ampl = np.sqrt(hhl.prob_from_counts_hhl(results))
 num = int(len(prob_ampl)/2)

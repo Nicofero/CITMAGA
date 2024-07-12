@@ -162,3 +162,7 @@ cython_debug/
 #.idea/
 
 user
+outputs/qasm-13855.out
+qasm_32.qasm
+outputs/a64-13889.out
+outputs/qasm-13872.out
