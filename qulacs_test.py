@@ -44,7 +44,7 @@ def parse_qasm3(qasm_code):
 def qasm3_to_qulacs(qasm_code):
     qubit_dict,operations = parse_qasm3(qasm_code)
     total_qubits = sum(qubit_dict.values())
-    circuit = QuantumCircuit(total_qubits)
+    circuit = QuantumCircuit(total_qubits+1)
     
     # Create a mapping from (qubit name, index) to linear index
     qubit_map = {}
@@ -80,13 +80,13 @@ globalqubits = int(np.log2(mpisize))
 if mpirank==0:
     print("\n\n-------------PRUEBA QULACS-------------\n\n")
 
-with open('qasm_16.qasm','r') as file:
+with open('qasm_32.qasm','r') as file:
     qasm_code = file.read()
 
 hhl_qul,n_qubits = qasm3_to_qulacs(qasm_code)
 
 start = time.time()
-state = QuantumState(n_qubits,use_multi_cpu = True)
+state = QuantumState(n_qubits+1,use_multi_cpu = True)
 hhl_qul.update_quantum_state(state)
 state_vector = state.get_vector().real
 end= time.time()
@@ -94,7 +94,6 @@ end= time.time()
 num = 2**(n_qubits-1)
 
 if mpirank == 0:
-    print(np.round(state_vector,5))
     print("Time with Qulacs: ",end-start)
 
-    print("Solución:",state_vector[num:num+2**4])
+    print("Solución:",state_vector[num:num+2**5])

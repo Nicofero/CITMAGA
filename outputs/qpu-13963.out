@@ -1,0 +1,31 @@
+slurmstepd: info: Setting TMPDIR to /scratch/13963. Previous errors about TMPDIR can be discarded
+qmio-run/0.1.3-python-3.9.9 loaded
+qmio-tools/0.1.2-python-3.9.9 loaded
+gcc/12.3.0 unloaded
+boost/1.85.0 unloaded
+boost/1.85.0 loaded
+boost.python/1.85.0-python-3.9.9 unloaded
+boost.python/1.85.0-python-3.9.9 loaded
+pythran/0.15.0-python-3.9.9 unloaded
+scipy/1.13.0-python-3.9.9 unloaded
+qiskit/1.0.2-python-3.9.9 unloaded
+qulacs/0.6.3-python-3.9.9 unloaded
+qmio-tools/0.1.2-python-3.9.9 unloaded
+qmio-tools/0.1.1-python-3.9.9 loaded
+gcc/12.3.0 loaded
+boost/1.85.0 unloaded
+boost/1.85.0 loaded
+boost.python/1.85.0-python-3.9.9 unloaded
+boost.python/1.85.0-python-3.9.9 loaded
+qmio-tools/0.1.1-python-3.9.9 unloaded
+qmio-tools/0.1.2-python-3.9.9 loaded
+pythran/0.15.0-python-3.9.9 loaded
+scipy/1.13.0-python-3.9.9 loaded
+qiskit/1.0.2-python-3.9.9 loaded
+qulacs/0.6.3-python-3.9.9 loaded
+qiskit/1.0.2-python-3.9.9 unloaded
+qiskit/1.0.2-python-3.9.9 loaded
+Importing calibrations from  /opt/cesga/qmio/hpc/calibrations/2024_07_12__12_00_01.json
+Importing calibrations from  /opt/cesga/qmio/hpc/calibrations/2024_07_12__12_00_01.json
+Estimated amplitudes of the solution: [0.75724829 0.65312711]
+Solution:  [0.3768431  0.32502741]

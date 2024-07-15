@@ -1,0 +1,66 @@
+slurmstepd: info: Setting TMPDIR to /scratch/13954. Previous errors about TMPDIR can be discarded
+qmio-run/0.1.3-python-3.9.9 loaded
+qmio-tools/0.1.2-python-3.9.9 loaded
+gcc/12.3.0 unloaded
+boost/1.85.0 unloaded
+boost/1.85.0 loaded
+boost.python/1.85.0-python-3.9.9 unloaded
+boost.python/1.85.0-python-3.9.9 loaded
+pythran/0.15.0-python-3.9.9 unloaded
+scipy/1.13.0-python-3.9.9 unloaded
+qiskit/1.0.2-python-3.9.9 unloaded
+qulacs/0.6.3-python-3.9.9 unloaded
+qmio-tools/0.1.2-python-3.9.9 unloaded
+qmio-tools/0.1.1-python-3.9.9 loaded
+gcc/12.3.0 loaded
+boost/1.85.0 unloaded
+boost/1.85.0 loaded
+boost.python/1.85.0-python-3.9.9 unloaded
+boost.python/1.85.0-python-3.9.9 loaded
+qmio-tools/0.1.1-python-3.9.9 unloaded
+qmio-tools/0.1.2-python-3.9.9 loaded
+pythran/0.15.0-python-3.9.9 loaded
+scipy/1.13.0-python-3.9.9 loaded
+qiskit/1.0.2-python-3.9.9 loaded
+qulacs/0.6.3-python-3.9.9 loaded
+qiskit/1.0.2-python-3.9.9 unloaded
+qiskit/1.0.2-python-3.9.9 loaded
+
+
+-------------PRUEBA QULACS-------------
+
+
+Time with Qulacs:  208.86134934425354
+Solución: [0.02561564 0.04962462 0.07202865 0.09282879 0.11202872 0.12963012
+ 0.14563486 0.16004459 0.17285919 0.18407814 0.19369991 0.20172259
+ 0.20814477 0.21296258 0.21617513 0.21778193 0.21778193 0.21617513
+ 0.21296258 0.20814477 0.20172259 0.19369991 0.18407814 0.17285919
+ 0.16004459 0.14563486 0.12963012 0.11202872 0.09282879 0.07202865
+ 0.04962462 0.02561564]
+
+*****************************************************************************
+*                                                                           *
+*                    JOB EFFICIENCY REPORT (seff 13954)                   *
+*                                                                           *
+*****************************************************************************
+
+Job ID: 13954
+Cluster: qmio
+User/Group: usceifft/usc
+State: COMPLETED (exit code 0)
+Nodes: 1
+Cores per node: 64
+CPU Utilized: 03:45:29
+CPU Efficiency: 50.45% of 07:26:56 core-walltime
+Job Wall-clock time: 00:06:59
+Memory Utilized: 4.09 GB
+Memory Efficiency: 6.39% of 64.00 GB
+
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ ++   Memory Efficiency is too small. Please review the requested memory. ++
+ ++ It seems that you do not need that much memory so we recommend        ++
+ ++ requesting less memory in other similar jobs.                         ++
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 
+*****************************************************************************
+

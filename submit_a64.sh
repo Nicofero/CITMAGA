@@ -4,8 +4,8 @@
 #SBATCH --tasks-per-node=1        # Número de tareas por nodo
 #SBATCH -o ./outputs/a64-%j.out
 #SBATCH -c 48                     # Número de hilos por tarea
-#SBATCH -t 0:10:0                 # Time limit
-#SBATCH --mem-per-cpu=1G        # Memoria por cpu
+#SBATCH -t 5:0:0                 # Time limit
+#SBATCH --mem-per-cpu=600M        # Memoria por cpu
 
 source /etc/profile.d/lmod.sh
 

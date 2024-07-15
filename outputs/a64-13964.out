@@ -1,0 +1,91 @@
+slurmstepd: info: Setting TMPDIR to /scratch/13964. Previous errors about TMPDIR can be discarded
+autotools loaded
+prun/2.2 loaded
+gnu12/12.2.0 loaded
+hwloc/2.7.0 loaded
+ucx/1.11.2 loaded
+libfabric/1.13.0 loaded
+openmpi4/4.1.4 loaded
+ohpc loaded
+qmio/hpc unloaded
+gcccore/12.3.0 unloaded
+binutils/2.40 unloaded
+sqlite/3.45.3 unloaded
+libffi/3.4.2 unloaded
+python/3.9.9 unloaded
+cmake/3.27.6 unloaded
+imkl/2023.2.0 unloaded
+ninja/1.9.0 unloaded
+meson/1.4.0-python-3.9.9 unloaded
+meson-python/0.16.0-python-3.9.9 unloaded
+cython/3.0.9-python-3.9.9 unloaded
+numpy/1.26.4-python-3.9.9 unloaded
+pybind11/2.12.0-python-3.9.9 unloaded
+xsimd/12.1.1 unloaded
+nasm/2.16.03 unloaded
+libjpeg-turbo/3.0.2 unloaded
+matplotlib/3.5.3-python-3.9.9 unloaded
+pandas/2.2.2-python-3.9.9 unloaded
+seaborn/0.12.2-python-3.9.9 unloaded
+gcc/12.3.0 unloaded
+boost/1.85.0 unloaded
+boost.python/1.85.0-python-3.9.9 unloaded
+pythran/0.15.0-python-3.9.9 unloaded
+scipy/1.13.0-python-3.9.9 unloaded
+rust/1.75.0 unloaded
+llvm/16.0.0 unloaded
+gmp/6.3.0 unloaded
+mpfr/4.2.1 unloaded
+mpc/1.3.1 unloaded
+flint/3.1.2 unloaded
+symengine/0.11.2 unloaded
+symengine-python/0.11.0-python-3.9.9 unloaded
+spdlog/1.9.2 unloaded
+pylatexenc/2.10-python-3.9.9 unloaded
+libgd/2.3.3 unloaded
+qiskit/1.0.2-python-3.9.9 unloaded
+qulacs/0.6.3-python-3.9.9 unloaded
+
+Inactive Modules:
+  1) binutils/2.40                       20) nasm/2.16.03
+  2) boost.python/1.85.0-python-3.9.9    21) ninja/1.9.0
+  3) boost/1.85.0                        22) numpy/1.26.4-python-3.9.9
+  4) cmake/3.27.6                        23) pandas/2.2.2-python-3.9.9
+  5) cython/3.0.9-python-3.9.9           24) pybind11/2.12.0-python-3.9.9
+  6) flint/3.1.2                         25) pylatexenc/2.10-python-3.9.9
+  7) gcc                                 26) python/3.9.9
+  8) gcccore/12.3.0                      27) pythran/0.15.0-python-3.9.9
+  9) gmp/6.3.0                           28) qiskit
+ 10) imkl/2023.2.0                       29) qmio/hpc
+ 11) libffi/3.4.2                        30) qulacs
+ 12) libgd/2.3.3                         31) rust/1.75.0
+ 13) libjpeg-turbo/3.0.2                 32) scipy/1.13.0-python-3.9.9
+ 14) llvm/16.0.0                         33) seaborn/0.12.2-python-3.9.9
+ 15) matplotlib/3.5.3-python-3.9.9       34) spdlog/1.9.2
+ 16) meson-python/0.16.0-python-3.9.9    35) sqlite/3.45.3
+ 17) meson/1.4.0-python-3.9.9            36) symengine-python/0.11.0-python-3.9.9
+ 18) mpc/1.3.1                           37) symengine/0.11.2
+ 19) mpfr/4.2.1                          38) xsimd/12.1.1
+
+	Preparing the qulacs module.
+    
+gnu12/12.2.0 unloaded
+hwloc/2.7.0 unloaded
+ucx/1.11.2 unloaded
+libfabric/1.13.0 unloaded
+openmpi4/4.1.4 unloaded
+gnu12/12.2.0 loaded
+hwloc/2.7.0 loaded
+ucx/1.11.2 loaded
+libfabric/1.13.0 loaded
+openmpi4/4.1.4 loaded
+py3-mpi4py/3.1.3 loaded
+hpcx-mt-ompi loaded
+qulacs-hpcx/1.0 loaded
+c7-102
+c7-102
+
+
+-------------PRUEBA QULACS-------------
+
+

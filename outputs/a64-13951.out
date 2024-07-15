@@ -1,0 +1,37 @@
+slurmstepd: info: Setting TMPDIR to /scratch/13951. Previous errors about TMPDIR can be discarded
+autotools loaded
+prun/2.2 loaded
+gnu12/12.2.0 loaded
+hwloc/2.7.0 loaded
+ucx/1.11.2 loaded
+libfabric/1.13.0 loaded
+openmpi4/4.1.4 loaded
+ohpc loaded
+qmio/hpc unloaded
+
+Inactive Modules:
+  1) qmio/hpc
+
+	Preparing the qulacs module.
+    
+gnu12/12.2.0 unloaded
+hwloc/2.7.0 unloaded
+ucx/1.11.2 unloaded
+libfabric/1.13.0 unloaded
+openmpi4/4.1.4 unloaded
+gnu12/12.2.0 loaded
+hwloc/2.7.0 loaded
+ucx/1.11.2 loaded
+libfabric/1.13.0 loaded
+openmpi4/4.1.4 loaded
+py3-mpi4py/3.1.3 loaded
+hpcx-mt-ompi loaded
+qulacs-hpcx/1.0 loaded
+c7-101
+c7-101
+
+
+-------------PRUEBA QULACS-------------
+
+
+slurmstepd-c7-101: error: *** JOB 13951 ON c7-101 CANCELLED AT 2024-07-15T09:48:28 ***
