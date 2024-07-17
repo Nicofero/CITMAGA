@@ -1,0 +1,87 @@
+slurmstepd: info: Setting TMPDIR to /scratch/14120. Previous errors about TMPDIR can be discarded
+libffi/3.4.2 loaded
+gmp/6.1.2 loaded
+glpk/4.65 loaded
+python/3.9.9 loaded
+qmio-run/0.1.3-python-3.9.9 loaded
+qmio-tools/0.1.1-python-3.9.9 loaded
+gcccore/12.3.0 loaded
+binutils/2.40 loaded
+gcc/12.3.0 loaded
+rust/1.75.0 loaded
+cmake/3.27.6 loaded
+
+imkl/2023.2.0 loaded
+ninja/1.9.0 loaded
+meson/1.4.0-python-3.9.9 loaded
+meson-python/0.16.0-python-3.9.9 loaded
+cython/3.0.9-python-3.9.9 loaded
+numpy/1.26.4-python-3.9.9 loaded
+pythran/0.15.0-python-3.9.9 loaded
+pybind11/2.12.0-python-3.9.9 loaded
+xsimd/12.1.1 loaded
+scipy/1.13.0-python-3.9.9 loaded
+llvm/16.0.0 loaded
+gmp/6.1.2 unloaded
+gmp/6.3.0 loaded
+mpfr/4.2.1 loaded
+mpc/1.3.1 loaded
+flint/3.1.2 loaded
+symengine/0.11.2 loaded
+symengine-python/0.11.0-python-3.9.9 loaded
+spdlog/1.9.2 loaded
+pylatexenc/2.10-python-3.9.9 loaded
+libgd/2.3.3 loaded
+nasm/2.16.03 loaded
+libjpeg-turbo/3.0.2 loaded
+matplotlib/3.5.3-python-3.9.9 loaded
+pandas/2.2.2-python-3.9.9 loaded
+seaborn/0.12.2-python-3.9.9 loaded
+qiskit/1.0.2-python-3.9.9 loaded
+libffi/3.4.2 unloaded
+libffi/3.4.2 loaded
+python/3.9.9 unloaded
+sqlite/3.45.3 loaded
+python/3.9.9 loaded
+qmio-tools/0.1.1-python-3.9.9 unloaded
+qmio-tools/0.1.2-python-3.9.9 loaded
+
+Due to MODULEPATH changes, the following have been reloaded:
+  1) libffi/3.4.2     2) python/3.9.9
+
+The following have been reloaded with a version change:
+  1) gmp/6.1.2 => gmp/6.3.0
+  2) qmio-tools/0.1.1-python-3.9.9 => qmio-tools/0.1.2-python-3.9.9
+
+Importing calibrations from  /opt/cesga/qmio/hpc/calibrations/2024_07_16__12_00_02.json
+Importing calibrations from  /opt/cesga/qmio/hpc/calibrations/2024_07_16__12_00_02.json
+Estimated amplitudes of the solution: [0.49489655 0.52543093 0.5020192  0.47642047]
+{'1100001': 86, '1010101': 65, '1011000': 84, '1110000': 88, '1000101': 88, '0000100': 197, '0100111': 178, '1111001': 95, '0110101': 203, '0001111': 179, '0100011': 187, '0110110': 198, '0000101': 189, '1110101': 80, '1101111': 61, '1100010': 88, '1001010': 55, '1010110': 89, '1010011': 65, '0011001': 180, '0101000': 190, '0000000': 187, '0011110': 157, '1001011': 68, '0110001': 203, '0000011': 148, '0100110': 175, '0110100': 201, '0001110': 153, '1110011': 79, '1111011': 67, '0111101': 175, '1101101': 73, '0001000': 198, '1000000': 85, '0011101': 171, '1100111': 65, '0010001': 175, '0111010': 182, '0101001': 194, '0000001': 195, '1000011': 73, '0101111': 159, '0101101': 164, '1001000': 79, '1101100': 61, '1011100': 78, '0100001': 208, '0010101': 204, '1100011': 71, '0011100': 201, '1001110': 68, '0110010': 158, '0101100': 200, '0110011': 171, '0011011': 189, '0111100': 171, '1101010': 69, '0011111': 173, '0010100': 189, '1011110': 57, '1011011': 71, '1110110': 85, '0010011': 172, '1101110': 69, '0001010': 170, '1111100': 77, '1000010': 90, '1111111': 77, '1101011': 50, '0110111': 161, '1100101': 109, '1110001': 98, '1111110': 63, '1101000': 80, '0010000': 207, '1100100': 73, '1011001': 55, '0001011': 171, '0011000': 164, '0111011': 188, '0111110': 158, '0011010': 155, '1000001': 108, '0000110': 164, '0100100': 176, '0001101': 191, '1000100': 78, '1111010': 70, '0010010': 173, '1001100': 69, '0111000': 159, '0100010': 192, '1100000': 88, '0001001': 197, '1111101': 69, '0110000': 193, '0101011': 181, '0001100': 215, '1110111': 59, '1011101': 57, '0010110': 190, '0010111': 174, '0000010': 168, '1110100': 87, '0111001': 180, '1110010': 74, '1010001': 93, '1001111': 68, '1100110': 89, '0100101': 205, '1000111': 75, '1010100': 65, '0101010': 163, '1010111': 68, '1011111': 70, '0111111': 159, '1101001': 62, '1010010': 74, '1010000': 92, '0100000': 204, '0000111': 174, '0101110': 159, '1000110': 86, '1011010': 57, '1001001': 73, '1001101': 72, '1111000': 82}
+Solution:  [0.76212028 0.80914196 0.77308885 0.73366787]
+
+*****************************************************************************
+*                                                                           *
+*                    JOB EFFICIENCY REPORT (seff 14120)                   *
+*                                                                           *
+*****************************************************************************
+
+Job ID: 14120
+Cluster: qmio
+User/Group: usceifft/usc
+State: COMPLETED (exit code 0)
+Nodes: 1
+Cores per node: 64
+CPU Utilized: 00:00:28
+CPU Efficiency: 6.25% of 00:07:28 core-walltime
+Job Wall-clock time: 00:00:07
+Memory Utilized: 0.00 MB (estimated maximum)
+Memory Efficiency: 0.00% of 64.00 GB (1.00 GB/core)
+
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ ++   Memory Efficiency is too small. Please review the requested memory. ++
+ ++ It seems that you do not need that much memory so we recommend        ++
+ ++ requesting less memory in other similar jobs.                         ++
+ +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 
+*****************************************************************************
+

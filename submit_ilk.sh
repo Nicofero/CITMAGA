@@ -4,7 +4,7 @@
 #
 #SBATCH -p ilk
 #SBATCH -N 1
-#SBATCH -o ./outputs/qulacs_ilk-%j.out
+#SBATCH -o ./outputs/dim4-%j.out
 #SBATCH --ntasks-per-node=1
 #SBATCH -c 64
 #SBATCH -t 10:0:0
@@ -15,7 +15,7 @@ module load gcc qiskit
 
 # python statevectors_test.py
 # python hybrid.py
-# python pruebas.py
+python pruebas.py
 # python b_test.py
 # python qulacs_test.py
-python stupid_test.py
+# python stupid_test.py

@@ -7,7 +7,7 @@ from qiskit.quantum_info import Statevector
 from qmiotools.integrations.qiskitqmio import QmioBackend, FakeQmio
 
 # Only change this
-nb=1
+nb=2
 
 NB = 2**nb
 vector = np.array([1]*NB)
@@ -21,7 +21,7 @@ hhl.qc = prepare_circ(hhl.qc)
 backend = QmioBackend()
 backend2 = FakeQmio()
 
-results = hhl.get_counts(backend)
+results = hhl.get_counts(backend2,shots=16384)
 
 prob_ampl = np.sqrt(hhl.prob_from_counts_hhl(results))
 num = int(len(prob_ampl)/2)
@@ -30,9 +30,10 @@ sol = prob_ampl[num:num+NB]
 print("Estimated amplitudes of the solution:", sol/np.linalg.norm(sol))
 
 norm = hhl.norm_from_counts(results)
+print(results)
 
 print("Solution: ",norm*sol)
 
 hist = plot_histogram(results)
 
-plt.savefig('hist.png')
+plt.savefig('hist_dim4.png')
