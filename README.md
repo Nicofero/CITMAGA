@@ -31,6 +31,10 @@ CITMAGA internship files. The internship consists in the implementation of a HHL
 
 - **Qulacs.ipynb:** Contains the functions to transform the Qiskit circuit into a Qulacs circuit, and some time comparisons.
 
+## Internship report
+
+The internship report can be found as a pdf in the file `PEI_Memoria_NicolasFernandezOtero.pdf`.
+
 ## References
 
 - [1] : Harrow, A. W., Hassidim, A., Lloyd, S. (2009). Quantum algorithm for linear systems of equations. Phys. Rev. Lett. 103, 15 (2009), 1–15. <https://doi.org/10.1103/PhysRevLett.103.150502>
